@@ -1,7 +1,7 @@
 var socket = io.connect();
 var opts = { peerOpts: { trickle: false }, autoUpgrade: false };
 var p2psocket = new P2P(socket, opts, function() {
-    p2psocket.useSockets = false;
+    p2psocket.usePeerConnection = true;
     p2psocket.emit('peer-obj', { peerId: p2psocket.peerId });
 });
 
