@@ -27,13 +27,14 @@ document.getElementById('msg-form').addEventListener('submit', function(e, d) {
 });
 
 socket.on('created', function(room, clientId) {
-    console.log('created room' + room);
+    console.log('created room' + room + clientId);
     isInitiator = false;
 });
 
 socket.on('joined', function(room, clientId) {
-    console.log('joined room' + room);
+    console.log('joined room' + room + clientId);
     isInitiator = true;
+    socket.emit('connectroom', room);
 });
 
 socket.on('full', function(room) {
@@ -42,14 +43,37 @@ socket.on('full', function(room) {
 
 var connectedP = {};
 
+socket.on('connectroom', function(sockets) {
+    for (var id in sockets) {
+        if (id !== socket.id) {
+            // Create p2p connection with socket client.
+            createConnection(id);
+        }
+    }
+    isInitiator = false; // only for joiners afterwards.
+    console.log('connections established');
+    console.log(connectedP);
+});
+
 socket.on('ready', function(id) {
     console.log('ready - ' + id);
+    console.log(socket.id);
+    createConnection(id);
+});
+
+socket.on('peer-connect', function(data, id) {
+    console.log('connect ' + id);
+    if (!connectedP[id])
+        createConnection(id);
+    connectedP[id].signal(data);
+});
+
+var createConnection = function(id) {
     var p = new SimplePeer({ initiator: isInitiator, trickle: false });
-    isInitiator = false; // only for joiners afterwards.
 
     p.on('signal', function(data) {
         console.log('SIGNAL', JSON.stringify(data));
-        socket.emit('signal', data, id);
+        socket.emit('offer', data, id);
     });
 
     p.on('connect', function() {
@@ -63,9 +87,4 @@ socket.on('ready', function(id) {
         document.getElementById('messages').appendChild(li);
     });
     connectedP[id] = p;
-});
-
-socket.on('peer-connect', function(data, id) {
-    console.log('connect ' + id);
-    connectedP[id].signal(data);
-});
+};

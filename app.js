@@ -31,12 +31,15 @@ io.on('connection', function(socket) {
             socket.broadcast.to(room).emit('join', room);
             socket.join(room);
             socket.emit('joined', room, socket.id);
-            io.sockets.in(room).emit('ready', socket.id);
         }
         socket.room = room;
     });
 
-    socket.on('signal', function(data, id) {
-        socket.broadcast.to(socket.room).emit('peer-connect', data, id);
+    socket.on('connectroom', function(room) {
+        socket.emit('connectroom', io.sockets.adapter.rooms[room].sockets);
+    });
+
+    socket.on('offer', function(data, id) {
+        io.to(id).emit('peer-connect', data, socket.id);
     });
 });
