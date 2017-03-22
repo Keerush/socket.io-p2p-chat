@@ -1,18 +1,19 @@
 {
-  "name": "simple-peer-chat",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.15.2",
-    "simple-peer": "^7.0.0",
-    "socket.io": "^1.7.3",
-    "socket.io-p2p": "^2.2.0",
-    "socket.io-p2p-server": "^1.2.0"
-  }
+    "name": "simple-peer-chat",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.15.2",
+        "simple-peer": "^7.0.0",
+        "socket.io": "^1.7.3",
+        "socket.io-p2p": "^2.2.0",
+        "socket.io-p2p-server": "^1.2.0"
+    }
 }
